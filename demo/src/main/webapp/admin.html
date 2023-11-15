@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./dashboard/csses/bootstrap.min.css">
+    <link rel="stylesheet" href="./dashboard/csses/font-awesome.css">
+    <link rel="stylesheet" href="./dashboard/csses/style.css">
+    <link rel="stylesheet" href="./dashboard/csses/home.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="main_container">
+        <div class="menubar">
+            <ul class="menu_list">
+                
+                <li class="item"><div style="height: 200px;" class="0 but_item">
+                    <p>Shop</p>
+                </div></li>
+                <li class="item"><div class="1 but_item active radio-option" onclick="handleClick(event)">
+                    
+                        <input class="radio" type="radio" name="menu" value="1">
+                        Home
+                    
+                </div></li>
+                <li class="item"><div class="2 but_item radio-option" onclick="handleClick(event)">
+                    
+                        <input class="radio" type="radio" name="menu" value="2">
+                        Report
+                    
+                </div></li>
+                <li class="item"><div class="3 but_item radio-option" onclick="handleClick(event)">
+                    
+                        <input class="radio" type="radio" name="menu" value="3">
+                        Statistics
+                    
+                </div></li>
+                <li class="item"><div class="4 but_item radio-option managerProduct" onclick="handleClick(event)">
+                    
+                        <input class="radio" type="radio" name="menu" value="4">
+                        Product Management
+                        <div class="task_manager hide">
+                            <div class="4.1 but_item radio-option" onclick="handleClick(event)">
+                    
+                                <input class="radio" type="radio" name="menu" value="6">
+                                Add
+                            
+                            </div>
+                            <div class="4.2 but_item radio-option" onclick="handleClick(event)">
+                    
+                                <input class="radio" type="radio" name="menu" value="7">
+                                Modify
+                            
+                            </div>
+                        </div>
+                        
+                    
+                </div></li>
+                <li class="item"><div class="5 but_item radio-option" onclick="handleClick(event)">
+                    
+                        <input class="radio" type="radio" name="menu" value="5">
+                        Bills
+                    
+                </div></li>
+                
+                
+            </ul>
+        </div>
+        <div class="display_content">
+            <div class="tranplay_content">
+                <form style="width: 80%;" action="handProduct" method="post" enctype="multipart/form-data">
+                    <div class="mb-3 mt-3">
+                      <label for="product_name" class="form-label">Product name:</label>
+                      <input type="text" class="form-control" id="name_Product" placeholder="Enter name" name="product_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Product Price:</label>
+                        <input type="number" class="form-control" id="productPrice" name="productPrice" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productBranch" class="form-label">Branch:</label>
+                        <input type="text" class="form-control" id="branch_product" list="branch_list" name="productBranch" required>
+                        <datalist id="branch_list">
+                            <option value="Adidas">
+                            <option value="Nike">
+                            <option value="None">
+                            <option value="None">
+                            <option value="None">
+                          </datalist>
+                    </div>
+                    <div class="mb-3" >
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="mb-3" >
+                        <label for="image" class="form-label">Select Image:</label>
+                        <input  type="file" class="form-control" id="imgProduct" name="image" required style="background-color: transparent;border: none;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="./dashboard/js/index.js"></script>
+    <script src="./dashboard/js/handCont.js"></script>
+    <script src="./dashboard/js/bootstrap.min.js"></script>
+</body>
+</html>
