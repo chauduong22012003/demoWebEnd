@@ -31,6 +31,7 @@ public class controlAdmin {
 				sess.getTransaction().commit();
 			}
 			sess.close();
+			
 		}catch (Exception e) {
 			// TODO: handle exception
 		}

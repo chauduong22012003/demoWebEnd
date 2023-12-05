@@ -1,5 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="demo.pojo.Product"%>
+<%@page import="java.util.List"%>
+<%@page import="demo.dao.ProductDao"%>
+<%@page import="demo.dao.cartDao"%>
+<%@page import="java.math.BigDecimal"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -24,9 +29,35 @@
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="https://kit.fontawesome.com/9e67a6eec1.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+    	.hide{
+    		display: none;
+    	}
+    </style>
 </head>
 
 <body>
+	<%
+		String userId="0";
+		String login="SIGN IN";
+		HttpSession _session = request.getSession();
+		if(_session!=null){
+			System.out.print("sesssion dang khong null");
+			userId = (String) session.getAttribute("userId"); 
+			String userName = (String) session.getAttribute("userName");
+			if(userName!=null){
+				login=userName;
+				System.out.print(login);
+			}
+		}
+		else{
+			System.out.print("sesssion dang null");
+		}
+		BigDecimal total_price_of_cart=cartDao.getTotalPrice(userId);
+		
+		DecimalFormat decimalFormat = new DecimalFormat("#,###");
+	%>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -37,7 +68,7 @@
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
-                <a href="#">Sign in</a>
+                <a href="login.jsp">Sign in</a>
                 <a href="#">FAQs</a>
             </div>
             <div class="offcanvas__top__hover">
@@ -63,7 +94,7 @@
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
+     <header style="background-color: #028843; color: white;" class="header">
         <div class="header__top">
             <div class="container">
                 <div class="row">
@@ -75,7 +106,7 @@
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                <a href="#">Sign in</a>
+                                <a href="login.jsp"><%=login %></a>
                                 <a href="#">FAQs</a>
                             </div>
                             <div class="header__top__hover">
@@ -86,45 +117,52 @@
                                     <li>USD</li>
                                 </ul>
                             </div>
+                            <div style="position: relative;" class="header__top__links <% if (login.equals("SIGN IN")==true) { %>hide<% }  %>">
+                                <button onclick="log_out()" style="position: absolute; right: -150px;top: -20px"><i class="fa-solid fa-right-from-bracket"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div  class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="./index.jap"><img src="img/logo.png" alt=""></a>
+                        <a href="./index.jsp"><img style="height: 50px"  src="img/R.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li><a href="./index.jap">Home</a></li>
-                            <li><a href="./shop.jap">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li class="active"><a style="color: white;" href="./index.jsp?stt=<%=login %>" data-value="home">Home</a></li>
+                            <li><a style="color: white;" href="./shop.jsp?stt=<%=login %>" data-value="shop">Shop</a></li>
+                            <li><a style="color: white;" href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="./about.jap">About Us</a></li>
-                                    <li><a href="./shop-details.jap">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.jap">Shopping Cart</a></li>
-                                    <li><a href="./checkout.jap">Check Out</a></li>
-                                    <li><a href="./blog-details.jap">Blog Details</a></li>
+                                    <li><a style="color: white;" href="./about.jsp?stt=<%=login %>" data-value="about">About Us</a></li>
+                                    <li><a style="color: white;" href="./shop-details.jsp?stt=<%=login %>" data-value="shop_details">Shop Details</a></li>
+                                    <li><a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>" data-value="shopping_cart">Shopping Cart</a></li>
+                                  <%--   <li><a style="color: white;" href="./checkout.jsp?stt=<%=login %>" data-value="check_out">Check Out</a></li> --%>
+                                    <li><a style="color: white;" href="./blog-details.jsp?stt=<%=login %>" data-value="blog_details">Blog Details</a></li>
                                 </ul>
                             </li>
-                            <li class="active"><a href="./blog.jap">Blog</a></li>
-                            <li><a href="./contact.jap">Contacts</a></li>
+                            <li><a style="color: white;" href="./blog.jsp?stt=<%=login %>" data-value="blog">Blog</a></li>
+                            <li><a style="color: white;" href="./contact.jsp?stt=<%=login%>" data-value="contacts">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        <a style="color: white;" href="#" class="search-switch"><i class="fa-solid fa-magnifying-glass"></i></a>
+                       <a href="FavoriteServlet?idcus=<%=userId %>" style="color: white;"><i  class="fa-solid fa-heart"></i></a>        <!-- chauduong -->
+                        <a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
+                         <%String formattedNum = decimalFormat.format(total_price_of_cart); %>
+                        <div style="color: white;" class="price">$ <%=formattedNum %></div>   <!-- phattien -->
+                        
+                        
                     </div>
                 </div>
+                
             </div>
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
@@ -349,6 +387,22 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    <script type="text/javascript">
+    	function log_out() {
+    		var xhr = new XMLHttpRequest();
+    		  xhr.open("POST", "accServlet", true); 
+    		  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    		  xhr.onreadystatechange = function() {
+    		    if (xhr.readyState === 4 && xhr.status === 200) {  
+    		      var response = xhr.responseText;
+    		      console.log(response);
+    		      window.location.href = "index.jsp";
+    		    }
+    		  };		 
+    		  var data = "id_act=log_out"; 
+    		  xhr.send(data);
+		}
+    </script>
 </body>
 
 </html>

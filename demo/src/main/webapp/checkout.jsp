@@ -1,5 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@page import="demo.pojo.Cart"%>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="demo.pojo.Product"%>
+<%@page import="java.util.List"%>
+<%@page import="demo.dao.ProductDao"%>
+<%@page import="demo.dao.cartDao"%>
+<%@page import="java.math.BigDecimal"%>
+<%@page import="servlets.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -24,9 +31,35 @@
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="https://kit.fontawesome.com/9e67a6eec1.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+    	.hide{
+    		display: none;
+    	}
+    </style>
 </head>
 
 <body>
+	<%
+		String userId="0";
+		String login="SIGN IN";
+		HttpSession _session = request.getSession();
+		if(_session!=null){
+			System.out.print("sesssion dang khong null");
+			userId = (String) session.getAttribute("userId"); 
+			String userName = (String) session.getAttribute("userName");
+			if(userName!=null){
+				login=userName;
+				System.out.print(login);
+			}
+		}
+		else{
+			System.out.print("sesssion dang null");
+		}
+		BigDecimal total_price_of_cart=cartDao.getTotalPrice(userId);
+		
+		DecimalFormat decimalFormat = new DecimalFormat("#,###");
+	%>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -37,7 +70,7 @@
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
-                <a href="#">Sign in</a>
+                <a href="login.jsp">Sign in</a>
                 <a href="#">FAQs</a>
             </div>
             <div class="offcanvas__top__hover">
@@ -57,25 +90,27 @@
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__text">
-            <p>Free shipping, 30-day return or refund guarantee.</p>
+            <!-- <p>Free shipping, 30-day return or refund guarantee. </p> -->
+            <p>${name}</p>
         </div>
     </div>
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
+      <header style="background-color: #028843; color: white;" class="header">
         <div class="header__top">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-7">
                         <div class="header__top__left">
-                            <p>Free shipping, 30-day return or refund guarantee.</p>
+                            <!-- <p>Free shipping, 30-day return or refund guarantee.</p> -->
+                             <p>${name}</p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                <a href="#">Sign in</a>
+                                <a href="login.jsp"><%=login %></a>
                                 <a href="#">FAQs</a>
                             </div>
                             <div class="header__top__hover">
@@ -86,45 +121,52 @@
                                     <li>USD</li>
                                 </ul>
                             </div>
+                            <div style="position: relative;" class="header__top__links <% if (login.equals("SIGN IN")==true) { %>hide<% }  %>">
+                                <button onclick="log_out()" style="position: absolute; right: -30px;top: -20px"><i class="fa-solid fa-right-from-bracket"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div  class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="./index.jsp"><img src="img/logo.png" alt=""></a>
+                        <a href="./index.jsp"><img style="height: 50px"  src="img/R.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li><a href="./index.jsp">Home</a></li>
-                            <li class="active"><a href="./shop.jsp">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li class="active"><a style="color: white;" href="./index.jsp?stt=<%=login %>" data-value="home">Home</a></li>
+                            <li><a style="color: white;" href="./shop.jsp?stt=<%=login %>" data-value="shop">Shop</a></li>
+                            <li><a style="color: white;" href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="./about.jsp">About Us</a></li>
-                                    <li><a href="./shop-details.jsp">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.jsp">Shopping Cart</a></li>
-                                    <li><a href="./checkout.jsp">Check Out</a></li>
-                                    <li><a href="./blog-details.jsp">Blog Details</a></li>
+                                    <li><a style="color: white;" href="./about.jsp?stt=<%=login %>" data-value="about">About Us</a></li>
+                                    <li><a style="color: white;" href="./shop-details.jsp?stt=<%=login %>" data-value="shop_details">Shop Details</a></li>
+                                    <li><a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>" data-value="shopping_cart">Shopping Cart</a></li>
+                                    <%-- <li><a style="color: white;" href="./checkout.jsp?stt=<%=login %>" data-value="check_out">Check Out</a></li> --%>
+                                    <li><a style="color: white;" href="./blog-details.jsp?stt=<%=login %>" data-value="blog_details">Blog Details</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./blog.jsp">Blog</a></li>
-                            <li><a href="./contact.jsp">Contacts</a></li>
+                            <li><a style="color: white;" href="./blog.jsp?stt=<%=login %>" data-value="blog">Blog</a></li>
+                            <li><a style="color: white;" href="./contact.jsp?stt=<%=login%>" data-value="contacts">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        <a style="color: white;" href="#" class="search-switch"><i class="fa-solid fa-magnifying-glass"></i></a>
+                       <a href="FavoriteServlet?idcus=<%=userId %>" style="color: white;"><i  class="fa-solid fa-heart"></i></a>       <!-- chauduong -->
+                        <a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
+                         <%String formattedNum = decimalFormat.format(total_price_of_cart); %>
+                        <div style="color: white;" class="price">$ <%=formattedNum %></div>   <!-- phattien -->
+                        
+                        
                     </div>
                 </div>
+                
             </div>
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
@@ -154,7 +196,7 @@
     <section class="checkout spad">
         <div class="container">
             <div class="checkout__form">
-                <form action="#">
+                <form action="CheckoutServlet" method="post">
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
                             <h6 class="coupon__code"><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click
@@ -163,115 +205,89 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
-                                        <p>Fist Name<span>*</span></p>
-                                        <input type="text">
+                                        <p>Name<span>*</span></p>
+                                        <input type="text" value="${name }" name="namecus">
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="checkout__input">
-                                        <p>Last Name<span>*</span></p>
-                                        <input type="text">
-                                    </div>
-                                </div>
+                                
                             </div>
-                            <div class="checkout__input">
-                                <p>Country<span>*</span></p>
-                                <input type="text">
-                            </div>
+                            
                             <div class="checkout__input">
                                 <p>Address<span>*</span></p>
-                                <input type="text" placeholder="Street Address" class="checkout__input__add">
-                                <input type="text" placeholder="Apartment, suite, unite ect (optinal)">
+                                <input type="text" placeholder="Street Address" name="addCus" class="checkout__input__add">
+                                
                             </div>
                             <div class="checkout__input">
                                 <p>Town/City<span>*</span></p>
-                                <input type="text">
+                                <input type="text" name="citycus">
                             </div>
-                            <div class="checkout__input">
-                                <p>Country/State<span>*</span></p>
-                                <input type="text">
-                            </div>
-                            <div class="checkout__input">
-                                <p>Postcode / ZIP<span>*</span></p>
-                                <input type="text">
-                            </div>
+                           
+                           
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Phone<span>*</span></p>
-                                        <input type="text">
+                                        <input type="text" value="${phone }" name="phonecus">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="text">
+                                        <input type="email" value="${email}" name="mailCus">
                                     </div>
                                 </div>
                             </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="acc">
-                                    Create an account?
-                                    <input type="checkbox" id="acc">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <p>Create an account by entering the information below. If you are a returning customer
-                                please login at the top of the page</p>
-                            </div>
+                            
                             <div class="checkout__input">
                                 <p>Account Password<span>*</span></p>
-                                <input type="text">
+                                <input type="password" name="passCus">
                             </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="diff-acc">
-                                    Note about your order, e.g, special noe for delivery
-                                    <input type="checkbox" id="diff-acc">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
+                           
                             <div class="checkout__input">
                                 <p>Order notes<span>*</span></p>
-                                <input type="text"
+                                <input type="text" name="noteCus"
                                 placeholder="Notes about your order, e.g. special notes for delivery.">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="checkout__order">
                                 <h4 class="order__title">Your order</h4>
-                                <div class="checkout__order__products">Product <span>Total</span></div>
+                                <div class="checkout__order__products">Product <span>Quantity</span></div>
                                 <ul class="checkout__total__products">
-                                    <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
+                                <%List<Cart> cus_pros = (List<Cart>) request.getAttribute("pros"); int count=0; double total= Double.parseDouble( request.getParameter("totalPrice")); %>
+                                <%for (Cart i:cus_pros) {%>
+                                <%
+                                	count+=1;
+                                
+                                %>
+                                <li style="display: flex;flex-direction: row;vertical-align: middle;" ><p style="width: 400px"><%=count %>. <%=i.getNameProduct() %></p> <span style="margin-left: 20px"><%=i.getQuantity()%></span></li>
+                                <%} %>
+                                   <%--  <li>01. ${pros.get(0).getNameProduct() }(${pros.get(0).getQuantity() }) <span>$ 300.0</span></li>
                                     <li>02. German chocolate <span>$ 170.0</span></li>
                                     <li>03. Sweet autumn <span>$ 170.0</span></li>
-                                    <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
+                                    <li>04. Cluten free mini dozen <span>$ 110.0</span></li> --%>
                                 </ul>
                                 <ul class="checkout__total__all">
-                                    <li>Subtotal <span>$750.99</span></li>
-                                    <li>Total <span>$750.99</span></li>
+                                    <li>Subtotal <span>$ 10</span></li>
+                                    <li>Total <span>$ ${totalPrice }</span></li>
                                 </ul>
-                                <div class="checkout__input__checkbox">
-                                    <label for="acc-or">
-                                        Create an account?
-                                        <input type="checkbox" id="acc-or">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua.</p>
+                              
                                 <div class="checkout__input__checkbox">
                                     <label for="payment">
-                                        Check Payment
-                                        <input type="checkbox" id="payment">
+                                        Online
+                                        <input value="online" type="radio" name="paymethod" id="payment">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
                                 <div class="checkout__input__checkbox">
                                     <label for="paypal">
-                                        Paypal
-                                        <input type="checkbox" id="paypal">
+                                        Cash
+                                        <input value="cash" type="radio" name="paymethod" id="paypal">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
+                                <input type="hidden" value="checkout" name="idAct">
+                                <input type="text" value="<%=total%>" name="totalPrice">
                                 <button type="submit" class="site-btn">PLACE ORDER</button>
                             </div>
                         </div>
@@ -334,7 +350,7 @@
                 <div class="col-lg-12 text-center">
                     <div class="footer__copyright__text">
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        <p>Copyright ©
+                        <p>Copyright Â©
                             <script>
                                 document.write(new Date().getFullYear());
                             </script>2020
@@ -371,6 +387,22 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    <script type="text/javascript">
+    	function log_out() {
+    		var xhr = new XMLHttpRequest();
+    		  xhr.open("POST", "accServlet", true); 
+    		  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    		  xhr.onreadystatechange = function() {
+    		    if (xhr.readyState === 4 && xhr.status === 200) {  
+    		      var response = xhr.responseText;
+    		      console.log(response);
+    		      window.location.href = "index.jsp";
+    		    }
+    		  };		 
+    		  var data = "id_act=log_out"; 
+    		  xhr.send(data);
+		}
+    </script>
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+<%@page import="java.math.BigDecimal"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -5,7 +6,7 @@
 <html lang="zxx">
 
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
     <meta name="description" content="Male_Fashion Template">
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,9 +26,75 @@
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/mystyle.css" type="text/css">
+    
+    <script src="https://kit.fontawesome.com/9e67a6eec1.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+    	.hide{
+    		display: none;
+    	}
+    </style>
 </head>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <body>
+
+
+	<%@ page import="demo.dao.*" %>
+	<%@ page import="demo.pojo.*" %>
+	<%@ page import="java.util.List" %>
+	<%@ page import="javax.servlet.http.HttpSession" %>
+	<%@ page import="java.util.Base64" %>
+	<%@ page import="java.text.DecimalFormat" %>
+	
+	<%
+		String login="SIGN IN";
+		String userId="0";
+		
+		HttpSession _session = request.getSession();
+		if(_session!=null){
+			
+			System.out.print("sesssion dang khong null");
+			
+			String userName = (String) _session.getAttribute("userName");
+			userId = (String) _session.getAttribute("userId");
+		
+			if(userName!=null){
+				login=userName;
+				System.out.print(login);
+			}
+		}
+		else{
+			System.out.print("sesssion dang null");
+		}
+		System.out.print(userId);
+		BigDecimal total_price_of_cart=cartDao.getTotalPrice(userId);
+		List<Product> prs=ProductDao.GetNewProduct();
+		List<Product> hotsale=ProductDao.getHotSale();
+		DecimalFormat decimalFormat = new DecimalFormat("#,###");
+		
+		
+		
+		
+	%>
+
+
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -64,7 +131,7 @@
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
+    <header style="background-color: #028843; color: white;" class="header">
         <div class="header__top">
             <div class="container">
                 <div class="row">
@@ -76,7 +143,7 @@
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                <a href="#">Sign in</a>
+                                <a href="login.jsp"><%=login %></a>
                                 <a href="#">FAQs</a>
                             </div>
                             <div class="header__top__hover">
@@ -87,45 +154,54 @@
                                     <li>USD</li>
                                 </ul>
                             </div>
+                            <div style="position: relative;" class="header__top__links <% if (login.equals("SIGN IN")==true) { %>hide<% }  %>">
+                                 <button onclick="log_out()" style="position: absolute; right: -30px;top: -20px"><i class="fa-solid fa-right-from-bracket"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div  class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="./index.jsp"><img src="img/logo.png" alt=""></a>
+                        <a href="./index.jsp"><img style="height: 50px"  src="img/R.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a href="./index.jsp">Home</a></li>
-                            <li><a href="./shop.jsp">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li class="active"><a style="color: white;" href="./index.jsp?stt=<%=login %>" data-value="home">Home</a></li>
+                            <li><a style="color: white;" href="./shop.jsp?stt=<%=login %>" data-value="shop">Shop</a></li>
+                            <li><a style="color: white;" href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="./about.jsp">About Us</a></li>
-                                    <li><a href="./shop-details.jsp">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.jsp">Shopping Cart</a></li>
-                                    <li><a href="./checkout.jsp">Check Out</a></li>
-                                    <li><a href="./blog-details.jsp">Blog Details</a></li>
+                                    <li><a style="color: white;" href="./about.jsp?stt=<%=login %>" data-value="about">About Us</a></li>
+                                    <li><a style="color: white;" href="./shop-details.jsp?stt=<%=login %>" data-value="shop_details">Shop Details</a></li>
+                                    <li><a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>" data-value="shopping_cart">Shopping Cart</a></li>
+                                    <%-- <li><a style="color: white;" href="./checkout.jsp?stt=<%=login %>" data-value="check_out">Check Out</a></li> --%>
+                                    <li><a style="color: white;" href="./blog-details.jsp?stt=<%=login %>" data-value="blog_details">Blog Details</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./blog.jsp">Blog</a></li>
-                            <li><a href="./contact.jsp">Contacts</a></li>
+                            <li><a style="color: white;" href="./blog.jsp?stt=<%=login %>" data-value="blog">Blog</a></li>
+                            <li><a style="color: white;" href="./contact.jsp?stt=<%=login%>" data-value="contacts">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
+               
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        <a style="color: white;" href="#" class="search-switch"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        
+                        <a href="FavoriteServlet?idcus=<%=userId %>" style="color: white;"><i  class="fa-solid fa-heart"></i></a>       <!-- chauduong -->
+                        <a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
+                         <%String formattedNum = decimalFormat.format(total_price_of_cart); %>
+                        <div style="color: white;" class="price">$ <%=formattedNum %></div>   <!-- phattien -->
+                        
+                        
                     </div>
                 </div>
+                
             </div>
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
@@ -135,15 +211,14 @@
     <!-- Hero Section Begin -->
     <section class="hero">
         <div class="hero__slider owl-carousel">
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
+            <div class="hero__items set-bg" data-setbg="img/rolex_back.png">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
                             <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2030</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                commitment to exceptional quality.</p>
+                                <h6>Rolex</h6>
+                                <h2>A Crown for Every Achievement.</h2>
+                                <p style="color: black;font-weight: bold;">Discover the epitome of timeless elegance and precision with Rolex.Crafted with meticulous attention to detail and legendary Swiss craftsmanship, each Rolex timepiece embodies the pinnacle of luxury and sophistication</p>
                                 <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
                                 <div class="hero__social">
                                     <a href="#"><i class="fa fa-facebook"></i></a>
@@ -156,15 +231,37 @@
                     </div>
                 </div>
             </div>
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-2.jpg">
+            
+            
+            <div class="hero__items set-bg" data-setbg="img/patekphilippe_back.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
                             <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2030</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                commitment to exceptional quality.</p>
+                                <h6>Patek Philippe</h6>
+                                <h2>You never actually own a Patek Philippe.</h2>
+                                <p style="color: black;font-weight: bold;">Introducing Patek Philippe, where time stands still in the embrace of timeless elegance. With a legacy spanning centuries, Patek Philippe has epitomized the pinnacle of Swiss watchmaking artistry.</p>
+                                <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                                <div class="hero__social">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero__items set-bg" data-setbg="img/omega_back.jpg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-7 col-md-8">
+                            <div class="hero__text">
+                                <h6>Omega</h6>
+                                <h2>The Exact Time for Life.</h2>
+                                <p style="font-weight: bold;color:white;">Welcome to the world of Omega, where timekeeping reaches new heights of excellence. With a heritage spanning over a century, Omega watches have become synonymous with precision, innovation, and timeless elegance</p>
                                 <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
                                 <div class="hero__social">
                                     <a href="#"><i class="fa fa-facebook"></i></a>
@@ -185,36 +282,40 @@
     <section class="banner spad">
         <div class="container">
             <div class="row">
+            	<form id="formgetbrand" action="GetBrand" method="get"> <!--  phat tien -->
+            		<input type="hidden" name="barnd">
+            		
+            	</form>
                 <div class="col-lg-7 offset-lg-4">
                     <div class="banner__item">
                         <div class="banner__item__pic">
-                            <img src="img/banner/banner-1.jpg" alt="">
+                            <img style="width: 450px" src="img/rolex_pre.jpg" alt="">
                         </div>
                         <div class="banner__item__text">
-                            <h2>Clothing Collections 2030</h2>
-                            <a href="#">Shop now</a>
+                            <h2>Rolex</h2>
+                            <a data-value="Rolex" style="cursor: pointer;" onclick="getBrand()" >Shop now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5">
                     <div class="banner__item banner__item--middle">
                         <div class="banner__item__pic">
-                            <img src="img/banner/banner-2.jpg" alt="">
+                            <img src="img/PatekPhilippe_pre.jpg" alt="">
                         </div>
                         <div class="banner__item__text">
-                            <h2>Accessories</h2>
-                            <a href="#">Shop now</a>
+                            <h2>Patek Philippe</h2>
+                            <a data-value="Patek Philippe" style="cursor: pointer;" onclick="getBrand()" >Shop now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-7">
                     <div class="banner__item banner__item--last">
                         <div class="banner__item__pic">
-                            <img src="img/banner/banner-3.jpg" alt="">
+                            <img style="width: 480px" src="img/omega_pre.jpg" alt="">
                         </div>
                         <div class="banner__item__text">
-                            <h2>Shoes Spring 2030</h2>
-                            <a href="#">Shop now</a>
+                            <h2>Omega</h2>
+                            <a data-value="Omega" style="cursor: pointer;" onclick="getBrand()" >Shop now</a>
                         </div>
                     </div>
                 </div>
@@ -225,7 +326,7 @@
 
     <!-- Product Section Begin -->
     <section class="product spad">
-        <div class="container">
+        <div id="containerIDuser" data-value=<%=userId %> class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="filter__controls">
@@ -238,17 +339,21 @@
             <div class="row product__filter">
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
+                    <% 
+                    String base64Image = Base64.getEncoder().encodeToString(prs.get(0).getImage());
+		        	String dataURL = "data:image/png;base64," + base64Image;
+                    %>
+                        <div class="product__item__pic set-bg" data-setbg="<%= dataURL %>">
                             <span class="label">New</span>
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                <li><a data-value=<%=prs.get(0).getId() %> onclick="addFavorite()"><img  src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <h6><%=prs.get(0).getName() %></h6>
+                           <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= prs.get(0).getId() %>,"id_cus":<%= userId %>,"price":<%=prs.get(0).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -256,7 +361,8 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$67.24</h5>
+                            <%String formattedNumber = decimalFormat.format(prs.get(0).getPrice()); %>
+                            <h5>$<%=formattedNumber %></h5>   <!-- chauduong -->
                             <div class="product__color__select">
                                 <label for="pc-1">
                                     <input type="radio" id="pc-1">
@@ -273,16 +379,20 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
+                    <% 
+                    String HSbase64Image = Base64.getEncoder().encodeToString(hotsale.get(0).getImage());
+		        	String HSdataURL = "data:image/png;base64," + HSbase64Image;
+                    %>
+                        <div class="product__item__pic set-bg" data-setbg="<%= HSdataURL %>">
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                <li><a data-value=<%=hotsale.get(0).getId() %> onclick="addFavorite()"><img  src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <h6><%=hotsale.get(0).getName() %></h6>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= hotsale.get(0).getId() %>,"id_cus":<%= userId %>,"price":<%=hotsale.get(0).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -290,7 +400,8 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$67.24</h5>
+                            <%String HSformattedNumber = decimalFormat.format(hotsale.get(0).getPrice()); %>
+                            <h5>$<%=HSformattedNumber %></h5>
                             <div class="product__color__select">
                                 <label for="pc-4">
                                     <input type="radio" id="pc-4">
@@ -307,17 +418,21 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                     <div class="product__item sale">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">
+                    <%
+                    String base64Image1 = Base64.getEncoder().encodeToString(prs.get(1).getImage());
+		        	String dataURL1 = "data:image/png;base64," + base64Image1; 
+		        	%>
+                        <div class="product__item__pic set-bg" data-setbg="<%= dataURL1 %>">
                             <span class="label">Sale</span>
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                <li><a data-value=<%=prs.get(1).getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Multi-pocket Chest Bag</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <h6><%=prs.get(1).getName() %></h6>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= prs.get(1).getId() %>,"id_cus":<%= userId %>,"price":<%=prs.get(1).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -325,7 +440,8 @@
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$43.48</h5>
+                            <%String formattedNumber1 = decimalFormat.format(prs.get(1).getPrice()); %>
+                            <h5>$<%=formattedNumber1 %></h5>
                             <div class="product__color__select">
                                 <label for="pc-7">
                                     <input type="radio" id="pc-7">
@@ -342,16 +458,20 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-4.jpg">
+                    <%
+                    String HSbase64Image1 = Base64.getEncoder().encodeToString(hotsale.get(1).getImage());
+		        	String HSdataURL1 = "data:image/png;base64," + HSbase64Image1; 
+		        	%>
+                        <div class="product__item__pic set-bg" data-setbg="<%=HSdataURL1%>">
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                 <li><a data-value=<%=hotsale.get(1).getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Diagonal Textured Cap</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                           <h6><%=hotsale.get(1).getName() %></h6>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= hotsale.get(1).getId() %>,"id_cus":<%= userId %>,"price":<%=hotsale.get(1).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -359,7 +479,8 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$60.9</h5>
+                           <%String HSformattedNumber1 = decimalFormat.format(hotsale.get(1).getPrice()); %>
+                            <h5>$<%=formattedNumber1 %></h5>
                             <div class="product__color__select">
                                 <label for="pc-10">
                                     <input type="radio" id="pc-10">
@@ -376,16 +497,20 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-5.jpg">
+                    <%
+                    String base64Image2 = Base64.getEncoder().encodeToString(prs.get(2).getImage());
+		        	String dataURL2 = "data:image/png;base64," + base64Image2; 
+		        	%>
+                        <div class="product__item__pic set-bg" data-setbg="<%= dataURL2 %>">
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                <li><a data-value=<%=prs.get(2).getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Lether Backpack</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <h6><%=prs.get(2).getName() %></h6>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= prs.get(2).getId() %>,"id_cus":<%= userId %>,"price":<%=prs.get(2).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -393,7 +518,8 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$31.37</h5>
+                             <%String formattedNumber2= decimalFormat.format(prs.get(2).getPrice()); %>
+                            <h5>$<%=formattedNumber2 %></h5>
                             <div class="product__color__select">
                                 <label for="pc-13">
                                     <input type="radio" id="pc-13">
@@ -410,17 +536,21 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
                     <div class="product__item sale">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-6.jpg">
+                     <%
+                    String HSbase64Image2 = Base64.getEncoder().encodeToString(hotsale.get(2).getImage());
+		        	String HSdataURL2 = "data:image/png;base64," + HSbase64Image2; 
+		        	%>
+                        <div class="product__item__pic set-bg" data-setbg="<%=HSdataURL2%>">
                             <span class="label">Sale</span>
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                               <li><a data-value=<%=hotsale.get(2).getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Ankle Boots</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                           <%=hotsale.get(2).getName() %>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= hotsale.get(2).getId() %>,"id_cus":<%= userId %>,"price":<%=hotsale.get(2).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -428,7 +558,8 @@
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$98.49</h5>
+                            <%String HSformattedNumber2= decimalFormat.format(hotsale.get(2).getPrice()); %>
+                            <h5>$<%=HSformattedNumber2 %></h5>
                             <div class="product__color__select">
                                 <label for="pc-16">
                                     <input type="radio" id="pc-16">
@@ -445,16 +576,20 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-7.jpg">
+                    <%
+                    String base64Image3 = Base64.getEncoder().encodeToString(prs.get(3).getImage());
+		        	String dataURL3 = "data:image/png;base64," + base64Image3; 
+		        	%>
+                        <div class="product__item__pic set-bg" data-setbg="<%= dataURL3 %>">
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                <li><a data-value=<%=prs.get(3).getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>T-shirt Contrast Pocket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <h6><%=prs.get(3).getName() %></h6>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= prs.get(3).getId() %>,"id_cus":<%= userId %>,"price":<%=prs.get(3).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -462,7 +597,8 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$49.66</h5>
+                           <%String formattedNumber3= decimalFormat.format(prs.get(3).getPrice()); %>
+                            <h5>$<%=formattedNumber3 %></h5>
                             <div class="product__color__select">
                                 <label for="pc-19">
                                     <input type="radio" id="pc-19">
@@ -479,16 +615,20 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/product/product-8.jpg">
+                    <%
+                    String HSbase64Image3 = Base64.getEncoder().encodeToString(hotsale.get(3).getImage());
+		        	String HSdataURL3 = "data:image/png;base64," + HSbase64Image3; 
+		        	%>
+                        <div class="product__item__pic set-bg" data-setbg="<%=HSdataURL3%>">
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                <li><a data-value=<%=hotsale.get(3).getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
                                 <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a></li>
                                 <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Basic Flowing Scarf</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <h6><%=hotsale.get(3).getName() %></h6>
+                            <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= hotsale.get(3).getId() %>,"id_cus":<%= userId %>,"price":<%=hotsale.get(3).getPrice() %>}' class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -496,7 +636,8 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$26.28</h5>
+                             <%String HSformattedNumber3= decimalFormat.format(hotsale.get(3).getPrice()); %>
+                            <h5>$<%=HSformattedNumber3 %></h5>
                             <div class="product__color__select">
                                 <label for="pc-22">
                                     <input type="radio" id="pc-22">
@@ -677,10 +818,10 @@
                     <div class="footer__widget">
                         <h6>NewLetter</h6>
                         <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                            <p>Leave an email if you would like to receive notifications about our new products!</p>
+                            <form action="MailServlet" method="get">
+                                <input type="email" placeholder="Your email" name="mail">
+                                <button type="submit"><span class="icon_mail_alt"></span></button>  <!-- abcd -->
                             </form>
                         </div>
                     </div>
@@ -727,6 +868,91 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+   <script type="text/javascript">
+	    function addTocart() {
+	        let dataValue = event.target.getAttribute("data-value");
+	        let jsonObject = JSON.parse(dataValue);
+	        let id_pro = jsonObject.id_pro;
+	        let id_cus = jsonObject.id_cus;
+	        let price=jsonObject.price;
+	        let name=jsonObject.name;
+	       
+	
+	        if (id_cus === null) {
+	            window.location.href = "login.jsp";
+	        } else {
+	        	
+	    		 
+	    		  window.location.href = "detailProduct.jsp?id_pro=" + id_pro + "&id_cus=" + id_cus+ "&price="+price;
+	        }
+	    }
+	    
+	    
+	    
+	    
+	    
+	    function getBrand() {
+	    
+	        let form = document.querySelector('#formgetbrand');
+	        form.querySelector('input').value=event.target.getAttribute('data-value')
+	        form.submit();
+	    }
+    </script>
+    
+     <script type="text/javascript">
+		    function log_out() {
+		    	
+				  var xhr = new XMLHttpRequest();
+				  xhr.open("POST", "accServlet", true); 
+				  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				  xhr.onreadystatechange = function() {
+				    if (xhr.readyState === 4 && xhr.status === 200) {  
+				      var response = xhr.responseText;
+				      console.log(response);
+				      window.location.href = "index.jsp";
+				      
+				    }
+				  };		 
+				  var data = "id_act=log_out"; 
+				  xhr.send(data); 
+				  
+				  
+			}
+			
+			
+			
+			function addFavorite() {
+				let login = document.querySelector("#containerIDuser").getAttribute('data-value');
+				if (login === "null") {
+					  window.location.replace("login.jsp");
+					} else {
+					  let anchorElement = event.target;
+					  let parent = anchorElement.parentNode;
+					  let id_proStr = parent.getAttribute("data-value");
+					  let idPro = parseInt(id_proStr);
+					  var xhr = new XMLHttpRequest();
+					  xhr.open("POST", "FavoriteProServlet", true);
+					  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+					  xhr.onreadystatechange = function() {
+					    if (xhr.readyState === 4 && xhr.status === 200) {
+					      var response = xhr.responseText;
+					      alert(response);
+					    }
+					  };
+
+					  var data = "id_pro=" + id_proStr;
+					  xhr.send(data);
+					}
+			}
+			
+			
+			
+			
+			
+    </script>
+   
+    
+    
 </body>
 
 </html>

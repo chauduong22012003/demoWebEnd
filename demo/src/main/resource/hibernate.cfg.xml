@@ -27,6 +27,25 @@
         <!-- Entity mapping -->
         <mapping class="demo.pojo.User" />
         <mapping class="demo.pojo.Product" />
+        <mapping class="demo.pojo.Bills" />
+        <mapping class="demo.pojo.Cart" />
+        <mapping class="demo.pojo.Account_cus" />
+        <mapping class="demo.pojo.Admin" />
+        <mapping class="demo.pojo.Customer" />
+        <mapping class="demo.pojo.Feedback" />
+        <mapping class="demo.pojo.Saled" />
+        <mapping class="demo.pojo.Favorite_products" />
+        <mapping class="demo.pojo.mail" />
+        
+
+        <!-- 
+        
+        
+        
+       
+        
+         -->
+         
          
     </session-factory>
 </hibernate-configuration>

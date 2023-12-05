@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@page import="java.math.BigDecimal"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -24,9 +24,47 @@
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="https://kit.fontawesome.com/9e67a6eec1.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+    	.hide{
+    		display: none;
+    	}
+    </style>
 </head>
 
 <body>
+	<%@ page import="demo.dao.*" %>
+	<%@ page import="demo.pojo.*" %>
+	<%@ page import="java.util.List" %>
+	<%@ page import="javax.servlet.http.HttpSession" %>
+	<%@ page import="java.util.Base64" %>
+	<%@ page import="java.text.DecimalFormat" %>
+	<%
+		String login="SIGN IN";
+		String userId="0";
+		
+		HttpSession _session = request.getSession();
+		if(_session!=null){
+			
+			System.out.print("sesssion dang khong null");
+			
+			String userName = (String) _session.getAttribute("userName");
+			userId = (String) _session.getAttribute("userId");
+			if(userName!=null){
+				login=userName;
+				System.out.print(login);
+			}
+		}
+		else{
+			System.out.print("sesssion dang null");
+		}
+		
+		List<Product> prs = (List<Product>) request.getAttribute("proList");
+		
+		BigDecimal total_price_of_cart=cartDao.getTotalPrice(userId);
+	
+		DecimalFormat decimalFormat = new DecimalFormat("#,###");
+	%>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -37,7 +75,7 @@
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
-                <a href="#">Sign in</a>
+                <a href="login.jsp">Sign in</a>
                 <a href="#">FAQs</a>
             </div>
             <div class="offcanvas__top__hover">
@@ -63,7 +101,7 @@
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
+    <header style="background-color: #028843; color: white;" class="header">
         <div class="header__top">
             <div class="container">
                 <div class="row">
@@ -75,7 +113,7 @@
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                <a href="#">Sign in</a>
+                                <a href="login.jsp"><%=login %></a>
                                 <a href="#">FAQs</a>
                             </div>
                             <div class="header__top__hover">
@@ -86,45 +124,52 @@
                                     <li>USD</li>
                                 </ul>
                             </div>
+                            <div style="position: relative;" class="header__top__links <% if (login.equals("SIGN IN")==true) { %>hide<% }  %>">
+                                <button onclick="log_out()" style="position: absolute; right: -30px;top: -20px"><i class="fa-solid fa-right-from-bracket"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div  class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="./index.jsp"><img src="img/logo.png" alt=""></a>
+                        <a href="./index.jsp"><img style="height: 50px"  src="img/R.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li><a href="./index.jsp">Home</a></li>
-                            <li class="active"><a href="./shop.jsp">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li ><a style="color: white;" href="./index.jsp?stt=<%=login %>" data-value="home">Home</a></li>
+                            <li class="active"><a style="color: white;" href="./shop.jsp?stt=<%=login %>" data-value="shop">Shop</a></li>
+                            <li><a style="color: white;" href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="./about.jsp">About Us</a></li>
-                                    <li><a href="./shop-details.jsp">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.jsp">Shopping Cart</a></li>
-                                    <li><a href="./checkout.jsp">Check Out</a></li>
-                                    <li><a href="./blog-details.jsp">Blog Details</a></li>
+                                    <li><a style="color: white;" href="./about.jsp?stt=<%=login %>" data-value="about">About Us</a></li>
+                                    <li><a style="color: white;" href="./shop-details.jsp?stt=<%=login %>" data-value="shop_details">Shop Details</a></li>
+                                    <li><a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>" data-value="shopping_cart">Shopping Cart</a></li>
+                                    <%-- <li><a style="color: white;" href="./checkout.jsp?stt=<%=login %>" data-value="check_out">Check Out</a></li> --%>
+                                    <li><a style="color: white;" href="./blog-details.jsp?stt=<%=login %>" data-value="blog_details">Blog Details</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./blog.jsp">Blog</a></li>
-                            <li><a href="./contact.jsp">Contacts</a></li>
+                            <li><a style="color: white;" href="./blog.jsp?stt=<%=login %>" data-value="blog">Blog</a></li>
+                            <li><a style="color: white;" href="./contact.jsp?stt=<%=login%>" data-value="contacts">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        <a style="color: white;" href="#" class="search-switch"><i class="fa-solid fa-magnifying-glass"></i></a>
+                       <a href="FavoriteServlet?idcus=<%=userId %>" style="color: white;"><i  class="fa-solid fa-heart"></i></a>         <!-- chauduong -->
+                        <a style="color: white;" href="./shopping-cart.jsp?id=<%=userId %>"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
+                         <%String formattedNum = decimalFormat.format(total_price_of_cart); %>
+                        <div style="color: white;" class="price">$ <%=formattedNum %></div>   <!-- phattien -->
+                        
+                        
                     </div>
                 </div>
+                
             </div>
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
@@ -336,8 +381,52 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div data-value=<%=userId %> id="containerIDuser" class="row">    <!-- chauduong -->
+                    
+                    	<%for(Product pr:prs){ %>
+                    	 <% 
+	                    String base64Image = Base64.getEncoder().encodeToString(pr.getImage());
+			        	String dataURL = "data:image/png;base64," + base64Image;
+	                    %>
+                    		<div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="<%= dataURL %>">
+                                    <ul class="product__hover">
+                                        <li><a data-value=<%=pr.getId() %> onclick="addFavorite()" ><img src="img/icon/heart.png" alt=""></a></li>
+                                        <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
+                                        </li>
+                                        <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><%=pr.getName() %></h6>
+                                    <a onclick="addTocart()" style="cursor: pointer;" data-value='{"id_pro":<%= pr.getId() %>,"id_cus":<%= userId %>,"price":<%=pr.getPrice() %>}' class="add-cart">+ Add To Cart</a>
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                     <%String formattedNumber = decimalFormat.format(pr.getPrice()); %>
+                            		<h5>$<%=formattedNumber %></h5> 
+                                    <div class="product__color__select">
+                                        <label for="pc-4">
+                                            <input type="radio" id="pc-4">
+                                        </label>
+                                        <label class="active black" for="pc-5">
+                                            <input type="radio" id="pc-5">
+                                        </label>
+                                        <label class="grey" for="pc-6">
+                                            <input type="radio" id="pc-6">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    	
+                    	<%} %>>
+                        <!-- <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item">
                                 <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
                                     <ul class="product__hover">
@@ -760,16 +849,16 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="product__pagination">
-                                <a class="active" href="#">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <span>...</span>
-                                <a href="#">21</a>
+                            <%long numpage = (Long) request.getAttribute("numpage"); %>
+                            <% for(int i=1; i<=numpage; i++) { %>
+							    <a class="<% if (i == Integer.parseInt(request.getAttribute("index").toString())){ %>active<%} %>" style="cursor: pointer;" onclick="getIndex(event)" data-value=<%=i %>><%= i %></a>
+							<% } %>
+                                
                             </div>
                         </div>
                     </div>
@@ -843,6 +932,9 @@
                 </div>
             </div>
         </div>
+        <form  id="formgetIndex" action="GetProductServlet" method="get">
+        	<input name="idget" type="hidden">
+        </form>
     </footer>
     <!-- Footer Section End -->
 
@@ -868,6 +960,81 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    <script type="text/javascript">
+    	function log_out() {
+    		var xhr = new XMLHttpRequest();
+    		  xhr.open("POST", "accServlet", true); 
+    		  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    		  xhr.onreadystatechange = function() {
+    		    if (xhr.readyState === 4 && xhr.status === 200) {  
+    		      var response = xhr.responseText;
+    		      console.log(response);
+    		      window.location.href = "index.jsp";
+    		    }
+    		  };		 
+    		  var data = "id_act=log_out"; 
+    		  xhr.send(data);
+    		  
+		}
+    	
+    	
+    	
+    	
+    	function getIndex(event) {
+    		  
+    		  let form = document.querySelector('#formgetIndex');
+    		  let inputValue = event.target.getAttribute('data-value');
+    		  form.querySelector('input').value = inputValue;
+    		  form.submit();
+    		  
+    		}
+    	
+    	
+    	function addFavorite() {
+			let login = document.querySelector("#containerIDuser").getAttribute('data-value');
+			if (login === "null") {
+				  window.location.replace("login.jsp");
+				} else {
+				  let anchorElement = event.target;
+				  let parent = anchorElement.parentNode;
+				  let id_proStr = parent.getAttribute("data-value");
+				  let idPro = parseInt(id_proStr);
+				  var xhr = new XMLHttpRequest();
+				  xhr.open("POST", "FavoriteProServlet", true);
+				  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				  xhr.onreadystatechange = function() {
+				    if (xhr.readyState === 4 && xhr.status === 200) {
+				      var response = xhr.responseText;
+				      alert(response);
+				    }
+				  };
+
+				  var data = "id_pro=" + id_proStr;
+				  xhr.send(data);
+				}
+		}
+    	
+    </script>
+    
+    <script type="text/javascript">
+	    function addTocart() {
+	        let dataValue = event.target.getAttribute("data-value");
+	        let jsonObject = JSON.parse(dataValue);
+	        let id_pro = jsonObject.id_pro;
+	        let id_cus = jsonObject.id_cus;
+	        let price=jsonObject.price;
+	        let name=jsonObject.name;
+	       
+	
+	        if (id_cus === null) {
+	            window.location.href = "login.jsp";
+	        } else {
+	        	
+	    		 
+	    		  window.location.href = "detailProduct.jsp?id_pro=" + id_pro + "&id_cus=" + id_cus+ "&price="+price;
+	        }
+	    }
+    </script>
 </body>
 
 </html>
