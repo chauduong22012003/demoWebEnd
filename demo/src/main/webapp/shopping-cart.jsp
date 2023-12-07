@@ -526,7 +526,7 @@
     	    	   
     	    	    input.textContent =(value-1).toString();
     	    	    totalPre-=price
-    	    	  }
+    	    	  
     	    	  var xhr = new XMLHttpRequest();
 	      		  xhr.open("POST", "Inc_Dec_servlet", true); 
 	      		  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -548,6 +548,8 @@
    	    	 	 }
 	      		  var data = "id_act=dec&idPro="+id_pro+"&idCus="+idCus; 
 	      		  xhr.send(data);  
+	      		  
+    	    	}
     	    };
     	});
     	
@@ -575,7 +577,7 @@
     	    	    input.textContent =(value+1).toString();
     	    	    totalPre+=price
     	    	   
-    	    	  }
+    	    	  
     	    	 var xhr = new XMLHttpRequest();
 	      		  xhr.open("POST", "Inc_Dec_servlet", true); 
 	      		  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -591,7 +593,8 @@
 	      		    }
 	      		  };		 
 	      		  var data = "id_act=inc&idPro="+id_pro+"&idCus="+idCus; 
-	      		  xhr.send(data); 
+	      		  xhr.send(data);
+    	    	}
     	    };
     	});
     	
